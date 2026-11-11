@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Ubica ITSP · Directorio del campus{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="pulse"></span> DIRECTORIO INTELIGENTE DEL CAMPUS</div>
+    <h1>Encuentra a quien<br>necesitas, <em>más fácil.</em></h1>
+    <p>Consulta dónde se encuentra el personal docente y administrativo dentro del ITSP.</p>
+    <div class="hero-note"><span class="wifi-icon">⌁</span><span>Ubicación institucional mediante Wi-Fi<br><small>Sin GPS · Sin seguimiento fuera del campus</small></span></div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+    <div class="map-grid"></div><div class="map-building building-one"><span>EDIFICIO A</span></div><div class="map-building building-two"><span>LABORATORIOS</span></div><div class="map-building building-three"><span>BIBLIOTECA</span></div>
+    <div class="map-path"></div><div class="map-pin pin-one"><b>●</b></div><div class="map-pin pin-two"><b>●</b></div>
+    <div class="map-label label-one">Aula 204 <i></i></div><div class="map-label label-two"><i></i> En campus</div>
+    <div class="map-caption"><span class="caption-mark">⌖</span><span><b>Tu campus, más cerca</b><small>Ubicaciones por espacio</small></span></div>
+  </div>
+  <div class="hero-watermark">PÁNUCO · VERACRUZ</div>
+</section>
+
+<section class="directory section-wrap">
+  <div class="section-heading"><div><div class="eyebrow dark-eyebrow">DIRECTORIO DEL PERSONAL</div><h2>¿A quién buscas?</h2><p>Encuentra a una persona y revisa su información institucional.</p></div><div class="availability"><span class="live-dot"></span> Consulta del campus</div></div>
+  <form class="search-box" method="get" action="{{ url_for('index') }}">
+    <span class="search-icon">⌕</span><input type="search" name="q" value="{{ term }}" placeholder="Buscar por nombre, área o materia…" aria-label="Buscar personal">
+    {% if category != 'todos' %}<input type="hidden" name="tipo" value="{{ category }}">{% endif %}<button type="submit">Buscar <span>→</span></button>
+  </form>
+  <div class="prototype-note"><span>i</span><div><b>Prototipo académico</b><small>Los registros y ubicaciones de ejemplo son ficticios. La lectura de Wi-Fi institucional está pendiente de validación técnica.</small></div></div>
+  <div class="filter-row"><div class="filters"><a class="filter {% if category == 'todos' %}selected{% endif %}" href="{{ url_for('index', q=term) }}">Todo el personal</a><a class="filter {% if category == 'docente' %}selected{% endif %}" href="{{ url_for('index', q=term, tipo='docente') }}"><span class="filter-mark teacher-mark"></span> Docentes</a><a class="filter {% if category == 'administrativo' %}selected{% endif %}" href="{{ url_for('index', q=term, tipo='administrativo') }}"><span class="filter-mark staff-mark"></span> Administrativos</a></div><span class="results-count">{{ people|length }} resultado{% if people|length != 1 %}s{% endif %}</span></div>
+  {% if people %}<div class="people-grid">{% for person in people %}
+    <article class="person-card">
+      <div class="card-top"><div class="avatar {% if person.role == 'docente' %}avatar-teacher{% else %}avatar-staff{% endif %}">{{ person.full_name[:1] }}{% if ' ' in person.full_name %}{{ person.full_name.split(' ')[1][:1] }}{% endif %}</div><span class="role-pill {% if person.role == 'docente' %}teacher-pill{% else %}staff-pill{% endif %}">{{ 'Docente' if person.role == 'docente' else 'Administrativo' }}</span></div>
+      <h3>{{ person.full_name }}</h3><div class="department">{{ person.department }}</div>
+      {% if person.subject %}<div class="subject-line"><span>▧</span> {{ person.subject }}</div>{% endif %}
+      <div class="card-divider"></div>
+      {% if person.location_status == 'located' and person.current_location %}<div class="location-line"><span class="location-symbol">⌖</span><div><small>UBICACIÓN ACTUAL</small><b>{{ person.current_location }}</b></div><span class="location-state located-state"><i></i> En campus</span></div>
+      {% elif person.location_status == 'off_campus' %}<div class="location-line"><span class="location-symbol muted-symbol">⌖</span><div><small>UBICACIÓN ACTUAL</small><b>Fuera del plantel</b></div><span class="location-state unknown-state">Confirmado</span></div>
+      {% else %}<div class="location-line"><span class="location-symbol muted-symbol">⌖</span><div><small>UBICACIÓN ACTUAL</small><b>No disponible</b></div><span class="location-state unknown-state">Sin señal</span></div>{% endif %}
+      <div class="card-meta"><span>◷ &nbsp;{{ person.schedule or 'Horario no registrado' }}</span><span>▦ &nbsp;{{ person.office or person.room or 'Espacio por confirmar' }}</span></div>
+    </article>
+  {% endfor %}</div>{% else %}<div class="empty-state"><span class="empty-icon">⌕</span><h3>No encontramos coincidencias</h3><p>Prueba con otro nombre, área o materia.</p><a href="{{ url_for('index') }}">Limpiar búsqueda</a></div>{% endif %}
+</section>
+
+<section class="how-section" id="como-funciona"><div class="section-wrap how-inner"><div><div class="eyebrow dark-eyebrow">TECNOLOGÍA PENSADA PARA EL CAMPUS</div><h2>Una búsqueda sencilla.<br><em>Información útil.</em></h2><p>La ubicación se plantea por espacios registrados dentro de la institución. El prototipo no usa GPS ni almacena recorridos.</p></div><div class="steps"><div class="step"><span>01</span><div><b>Busca al personal</b><p>Escribe nombre, departamento o materia.</p></div></div><div class="step"><span>02</span><div><b>Consulta su ficha</b><p>Revisa horario, área y espacio asignado.</p></div></div><div class="step"><span>03</span><div><b>Ubicación institucional</b><p>El sistema mostrará el espacio cuando la integración Wi-Fi esté disponible.</p></div></div></div></div><div class="privacy-note"><span>✳</span> La localización automática por Wi-Fi requiere validación con la infraestructura del ITSP.</div></section>
+{% endblock %}

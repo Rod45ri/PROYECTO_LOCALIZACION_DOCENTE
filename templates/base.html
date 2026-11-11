@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b2930">
+  <title>{% block title %}Ubica ITSP{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="Ubica ITSP, inicio">
+      <span class="brand-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 28s9-8.4 9-16a9 9 0 1 0-18 0c0 7.6 9 16 9 16Z"/><circle cx="16" cy="12" r="3"/><path d="M4 8a16 16 0 0 1 24 0M7 11a12 12 0 0 1 18 0"/></svg></span>
+      <span><b>ubica</b><small>ITSP · CAMPUS</small></span>
+    </a>
+    <nav><a class="nav-link active" href="{{ url_for('index') }}">Directorio</a><a class="nav-link" href="#como-funciona">Cómo funciona</a><a class="nav-admin" href="{{ url_for('admin_people') }}">Administración <span>↗</span></a></nav>
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+  <footer class="footer"><span>Instituto Tecnológico Superior de Pánuco</span><span><i></i> Solo dentro del campus</span><span>Prototipo académico · Taller de Investigación II</span></footer>
+</body>
+</html>
